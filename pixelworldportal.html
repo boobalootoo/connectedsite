@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel World</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+        }
+
+        #header {
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        #portal-container {
+            position: relative;
+            width: 100vw;
+            height: calc(100vh - 100px);
+        }
+
+        #camera {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        #portal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px; /* Larger portal */
+            height: 800px;
+            background: url('image.png') no-repeat center; /* Replace 'image.png' with your image path */
+            background-size: contain;
+            animation: spin 3s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        @keyframes spin {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        #canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 250px; /* Canvas smaller than portal */
+            height: 250px;
+            border-radius: 50%; /* Make canvas circular */
+            overflow: hidden;
+            z-index: 3; /* Pixelated layer above portal */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        Welcome to pixel world, you are an interdimensional traveller, you can capture pictures of species in your smooth world and store them here to visit whenever you want. Click here to go through the portal
+    </div>
+
+    <div id="portal-container">
+        <!-- Live camera feed -->
+        <video id="camera" autoplay muted></video>
+        
+        <!-- Pixelated canvas in the middle -->
+        <canvas id="canvas"></canvas>
+        
+        <!-- Spinning portal overlay -->
+        <div id="portal"></div>
+    </div>
+
+    <script>
+        const video = document.getElementById('camera');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Access the camera feed
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => video.srcObject = stream)
+            .catch(err => console.error('Camera access denied:', err));
+
+        // Pixelate the center of the portal
+        function pixelate() {
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+
+            ctx.drawImage(video, 0, 0, canvasWidth, canvasHeight);
+            const imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+
+            const pixelSize = 10; // Size of the pixelation
+
+            for (let y = 0; y < canvasHeight; y += pixelSize) {
+                for (let x = 0; x < canvasWidth; x += pixelSize) {
+                    const red = imageData.data[((y * canvasWidth + x) * 4)];
+                    const green = imageData.data[((y * canvasWidth + x) * 4) + 1];
+                    const blue = imageData.data[((y * canvasWidth + x) * 4) + 2];
+
+                    // Fill a rectangle with the pixel color
+                    ctx.fillStyle = `rgb(${red}, ${green}, ${blue})`;
+                    ctx.fillRect(x, y, pixelSize, pixelSize);
+                }
+            }
+
+            requestAnimationFrame(pixelate);
+        }
+
+        pixelate(); // Start pixelating
+    </script>
+
+</body>
+</html>
