@@ -21,18 +21,23 @@
             width: 300px;
             height: auto;
         }
-        .links {
+        .links, .content {
             margin-top: 20px;
         }
-        a {
+        a, button {
             display: block;
-            margin: 10px;
+            margin: 10px auto;
             color: #00ffcc;
             text-decoration: none;
             font-size: 18px;
+            padding: 10px 20px;
+            border: 2px solid #00ffcc;
+            background-color: transparent;
+            border-radius: 10px;
         }
-        a:hover {
-            text-decoration: underline;
+        a:hover, button:hover {
+            background-color: #00ffcc;
+            color: #000;
         }
     </style>
 </head>
@@ -40,11 +45,15 @@
     <div class="portal">
         <h1>Welcome to PixelWorld</h1>
         <img src="portalimage.png" alt="PixelWorld Portal">
+        <p>Welcome interdimensional traveller! Capture species, explore maps, and more!</p>
         <div class="links">
-            <a href="identifyerDONOTEDIT (2).html">Species Identifier</a>
-            <a href="pixelmapfinal.html">Pixel Map</a>
-            <a href="speciesnames.txt">Species List</a>
             <a href="warnings.html">Privacy & Data Disclaimer</a>
+            <a href="identifyerDONOTEDIT (2).html">Species Identifier</a>
+            <a href="pixelmapfinal.html">My Pixel World Map</a>
+            <a href="speciesnames.txt">Species List</a>
+        </div>
+        <div class="content">
+            <button onclick="location.href='portalimage.png'">Enter the Portal</button>
         </div>
     </div>
 </body>
